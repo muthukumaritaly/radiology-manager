@@ -130,7 +130,7 @@ pipeline {
             }
             steps {
                 script {
-                    withKubeConfig([credentialsId: env.KUBECONFIG_CREDS_ID]) {
+                    withCredentials([file(credentialsId: env.KUBECONFIG_CREDS_ID, variable: 'KUBECONFIG')]) {
                         sh "sed -i 's|IMAGE_PLACEHOLDER|${env.REGISTRY}/${env.IMAGE_NAME}:${env.IMAGE_TAG}|g' k8s/app-deployment.yaml"
                         
                         withCredentials([
