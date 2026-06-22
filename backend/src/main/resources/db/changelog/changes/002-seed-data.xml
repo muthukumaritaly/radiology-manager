@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <!-- Seed Organizations -->
+    <changeSet id="4" author="muthu">
+        <insert tableName="organizations">
+            <column name="id" valueNumeric="1"/>
+            <column name="name" value="San Raffaele Hospital Group"/>
+        </insert>
+        <insert tableName="organizations">
+            <column name="id" valueNumeric="2"/>
+            <column name="name" value="ASL 1"/>
+        </insert>
+    </changeSet>
+
+    <!-- Seed Containers -->
+    <changeSet id="5" author="muthu">
+        <validCheckSum>9:09026033ce3b3ba84976ed544c9777c3</validCheckSum>
+        <validCheckSum>9:1ba3034f55998425eac7d9335683f371</validCheckSum>
+        <!-- ========================================== -->
+        <!-- San Raffaele Hospital Group (Org 1)        -->
+        <!-- ========================================== -->
+        <!-- Plant A Hierarchy -->
+        <insert tableName="containers">
+            <column name="id" valueNumeric="1"/>
+            <column name="name" value="Plant A"/>
+            <column name="organization_id" valueNumeric="1"/>
+        </insert>
+        <insert tableName="containers">
+            <column name="id" valueNumeric="2"/>
+            <column name="name" value="Building 2"/>
+            <column name="organization_id" valueNumeric="1"/>
+            <column name="parent_container_id" valueNumeric="1"/>
+        </insert>
+        <insert tableName="containers">
+            <column name="id" valueNumeric="3"/>
+            <column name="name" value="Radiology Department"/>
+            <column name="organization_id" valueNumeric="1"/>
+            <column name="parent_container_id" valueNumeric="2"/>
+        </insert>
+        <!-- Nesting level 4: PET-CT Suite inside Radiology Dept -->
+        <insert tableName="containers">
+            <column name="id" valueNumeric="9"/>
+            <column name="name" value="PET-CT Suite"/>
+            <column name="organization_id" valueNumeric="1"/>
+            <column name="parent_container_id" valueNumeric="3"/>
+        </insert>
+
+        <!-- Oncology Center Hierarchy under Plant A -->
+        <insert tableName="containers">
+            <column name="id" valueNumeric="10"/>
+            <column name="name" value="Oncology Center"/>
+            <column name="organization_id" valueNumeric="1"/>
+            <column name="parent_container_id" valueNumeric="1"/>
+        </insert>
+        <insert tableName="containers">
+            <column name="id" valueNumeric="11"/>
+            <column name="name" value="Radiotherapy Bunker"/>
+            <column name="organization_id" valueNumeric="1"/>
+            <column name="parent_container_id" valueNumeric="10"/>
+        </insert>
+
+        <!-- Plant B Hierarchy -->
+        <insert tableName="containers">
+            <column name="id" valueNumeric="4"/>
+            <column name="name" value="Plant B"/>
+            <column name="organization_id" valueNumeric="1"/>
+        </insert>
+        <insert tableName="containers">
+            <column name="id" valueNumeric="5"/>
+            <column name="name" value="Emergency Ward"/>
+            <column name="organization_id" valueNumeric="1"/>
+            <column name="parent_container_id" valueNumeric="4"/>
+        </insert>
+
+        <!-- ========================================== -->
+        <!-- ASL 1 (Org 2)                              -->
+        <!-- ========================================== -->
+        <insert tableName="containers">
+            <column name="id" valueNumeric="6"/>
+            <column name="name" value="Main Clinic"/>
+            <column name="organization_id" valueNumeric="2"/>
+        </insert>
+        <!-- Cardiology wing (New structure) -->
+        <insert tableName="containers">
+            <column name="id" valueNumeric="7"/>
+            <column name="name" value="Cardiology Wing"/>
+            <column name="organization_id" valueNumeric="2"/>
+        </insert>
+        <insert tableName="containers">
+            <column name="id" valueNumeric="8"/>
+            <column name="name" value="Ultrasound Lab"/>
+            <column name="organization_id" valueNumeric="2"/>
+            <column name="parent_container_id" valueNumeric="7"/>
+        </insert>
+    </changeSet>
+
+    <!-- Seed Equipment -->
+    <changeSet id="6" author="muthu">
+        <validCheckSum>9:c7facdfc12fb09cd0a9d349209e5a48e</validCheckSum>
+        <validCheckSum>9:648bddb3633d601a4d2bce44cb97c2d3</validCheckSum>
+        <!-- ========================================== -->
+        <!-- San Raffaele Hospital Group (Org 1)        -->
+        <!-- ========================================== -->
+        <!-- Radiology Dept Assets -->
+        <insert tableName="equipment">
+            <column name="id" valueNumeric="1"/>
+            <column name="name" value="GE Revolution CT Scan"/>
+            <column name="type" value="CT"/>
+            <column name="serial_number" value="SN-CT-101"/>
+            <column name="installation_date" valueDate="2023-01-15"/>
+            <column name="organization_id" valueNumeric="1"/>
+            <column name="container_id" valueNumeric="3"/>
+        </insert>
+        <insert tableName="equipment">
+            <column name="id" valueNumeric="2"/>
+            <column name="name" value="Siemens Magnetom MRI"/>
+            <column name="type" value="MRI"/>
+            <column name="serial_number" value="SN-MR-202"/>
+            <column name="installation_date" valueDate="2023-05-20"/>
+            <column name="organization_id" valueNumeric="1"/>
+            <column name="container_id" valueNumeric="3"/>
+        </insert>
+        <!-- Deep asset inside PET-CT Suite -->
+        <insert tableName="equipment">
+            <column name="id" valueNumeric="7"/>
+            <column name="name" value="Siemens Biograph Vision PET-CT"/>
+            <column name="type" value="PET-CT"/>
+            <column name="serial_number" value="SN-PT-707"/>
+            <column name="installation_date" valueDate="2025-01-20"/>
+            <column name="organization_id" valueNumeric="1"/>
+            <column name="container_id" valueNumeric="9"/>
+        </insert>
+
+        <!-- Oncology Bunker Asset -->
+        <insert tableName="equipment">
+            <column name="id" valueNumeric="9"/>
+            <column name="name" value="Varian TrueBeam Linear Accelerator"/>
+            <column name="type" value="X-ray"/>
+            <column name="serial_number" value="SN-LA-909"/>
+            <column name="installation_date" valueDate="2023-10-18"/>
+            <column name="organization_id" valueNumeric="1"/>
+            <column name="container_id" valueNumeric="11"/>
+        </insert>
+
+        <!-- Emergency Ward Assets -->
+        <insert tableName="equipment">
+            <column name="id" valueNumeric="3"/>
+            <column name="name" value="Philips DuraDiagnost X-ray"/>
+            <column name="type" value="X-ray"/>
+            <column name="serial_number" value="SN-XR-303"/>
+            <column name="installation_date" valueDate="2024-02-10"/>
+            <column name="organization_id" valueNumeric="1"/>
+            <column name="container_id" valueNumeric="5"/>
+        </insert>
+        <insert tableName="equipment">
+            <column name="id" valueNumeric="8"/>
+            <column name="name" value="Fujifilm Sonosite PX Ultrasound"/>
+            <column name="type" value="Ultrasound"/>
+            <column name="serial_number" value="SN-US-808"/>
+            <column name="installation_date" valueDate="2025-05-15"/>
+            <column name="organization_id" valueNumeric="1"/>
+            <column name="container_id" valueNumeric="5"/>
+        </insert>
+
+        <!-- Direct Global Asset -->
+        <insert tableName="equipment">
+            <column name="id" valueNumeric="4"/>
+            <column name="name" value="Hologic Selenia Mammography Van"/>
+            <column name="type" value="Mammogram"/>
+            <column name="serial_number" value="SN-MG-404"/>
+            <column name="installation_date" valueDate="2022-11-05"/>
+            <column name="organization_id" valueNumeric="1"/>
+        </insert>
+
+        <!-- ========================================== -->
+        <!-- ASL 1 (Org 2)                              -->
+        <!-- ========================================== -->
+        <!-- Main Clinic Asset -->
+        <insert tableName="equipment">
+            <column name="id" valueNumeric="5"/>
+            <column name="name" value="Carestream DRX X-ray"/>
+            <column name="type" value="X-ray"/>
+            <column name="serial_number" value="SN-XR-505"/>
+            <column name="installation_date" valueDate="2021-08-25"/>
+            <column name="organization_id" valueNumeric="2"/>
+            <column name="container_id" valueNumeric="6"/>
+        </insert>
+        <!-- Cardiology Ultrasound Asset -->
+        <insert tableName="equipment">
+            <column name="id" valueNumeric="6"/>
+            <column name="name" value="Philips Epiq CVx Cardiac Ultrasound"/>
+            <column name="type" value="Ultrasound"/>
+            <column name="serial_number" value="SN-US-606"/>
+            <column name="installation_date" valueDate="2024-03-12"/>
+            <column name="organization_id" valueNumeric="2"/>
+            <column name="container_id" valueNumeric="8"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

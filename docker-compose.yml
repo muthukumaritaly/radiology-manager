@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: radiology-db
+    environment:
+      POSTGRES_DB: ${DB_NAME:-radiologydb}
+      POSTGRES_USER: ${SPRING_DATASOURCE_USERNAME:-admin}
+      POSTGRES_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-secretpassword}
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - radiology-net
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+  radiology-manager:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: radiology-manager
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - JAVA_OPTS=-XX:+UseG1GC -XX:MaxRAMPercentage=75.0
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/${DB_NAME:-radiologydb}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME:-admin}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD:-secretpassword}
+    networks:
+      - radiology-net
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1024M
+        reservations:
+          cpus: '0.50'
+          memory: 512M
+
+volumes:
+  pgdata:
+    driver: local
+
+networks:
+  radiology-net:
+    driver: bridge

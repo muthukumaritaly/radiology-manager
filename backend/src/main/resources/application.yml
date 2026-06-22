@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: radiology-manager
+  profiles:
+    active: dev
+  jpa:
+    open-in-view: false
+
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true

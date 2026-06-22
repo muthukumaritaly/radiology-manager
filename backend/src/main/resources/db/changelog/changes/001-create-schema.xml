@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <!-- Changelog 1: Create Organizations Table -->
+    <changeSet id="1" author="muthu">
+        <createTable tableName="organizations">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uq_org_name"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- Changelog 2: Create Containers Table -->
+    <changeSet id="2" author="muthu">
+        <createTable tableName="containers">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="organization_id" type="bigint">
+                <constraints nullable="false" 
+                             foreignKeyName="fk_container_organization" 
+                             referencedTableName="organizations" 
+                             referencedColumnNames="id"/>
+            </column>
+            <column name="parent_container_id" type="bigint">
+                <constraints foreignKeyName="fk_container_parent" 
+                             referencedTableName="containers" 
+                             referencedColumnNames="id"/>
+            </column>
+        </createTable>
+        
+        <!-- Indexing for optimization of tree queries -->
+        <createIndex indexName="idx_container_org" tableName="containers">
+            <column name="organization_id"/>
+        </createIndex>
+        <createIndex indexName="idx_container_parent" tableName="containers">
+            <column name="parent_container_id"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- Changelog 3: Create Equipment Table -->
+    <changeSet id="3" author="muthu">
+        <createTable tableName="equipment">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="serial_number" type="varchar(255)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uq_equipment_serial"/>
+            </column>
+            <column name="installation_date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="organization_id" type="bigint">
+                <constraints nullable="false" 
+                             foreignKeyName="fk_equipment_organization" 
+                             referencedTableName="organizations" 
+                             referencedColumnNames="id"/>
+            </column>
+            <column name="container_id" type="bigint">
+                <constraints foreignKeyName="fk_equipment_container" 
+                             referencedTableName="containers" 
+                             referencedColumnNames="id"/>
+            </column>
+        </createTable>
+
+        <!-- Indexing on FK columns and serial numbers -->
+        <createIndex indexName="idx_equipment_org" tableName="equipment">
+            <column name="organization_id"/>
+        </createIndex>
+        <createIndex indexName="idx_equipment_container" tableName="equipment">
+            <column name="container_id"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
