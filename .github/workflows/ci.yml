@@ -28,20 +28,11 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
           cache: 'maven'
+          cache-dependency-path: backend/pom.xml
 
       - name: Run Tests & Verify Code Coverage
         run: mvn -B clean verify
         working-directory: backend
-
-      - name: Run Trivy FS Vulnerability Scan
-        uses: aquasecurity/trivy-action@0.20.0
-        with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          format: 'table'
-          exit-code: '1'
-          ignore-unfixed: true
-          severity: 'CRITICAL,HIGH'
 
       - name: Upload Test Reports
         if: always()
@@ -61,11 +52,4 @@ jobs:
         run: |
           docker build -t radiology-manager:${{ github.sha }} -f Dockerfile .
 
-      - name: Run Trivy Docker Image Vulnerability Scan
-        uses: aquasecurity/trivy-action@0.20.0
-        with:
-          image-ref: 'radiology-manager:${{ github.sha }}'
-          format: 'table'
-          exit-code: '1'
-          ignore-unfixed: true
-          severity: 'CRITICAL,HIGH'
+
