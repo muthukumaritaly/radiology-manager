@@ -55,6 +55,26 @@ services:
           cpus: '0.50'
           memory: 512M
 
+  radiology-manager-fe:
+    build:
+      context: ./radiology-manager-fe
+      dockerfile: Dockerfile
+    container_name: radiology-manager-fe
+    ports:
+      - "4200:80"
+    depends_on:
+      - radiology-manager
+    networks:
+      - radiology-net
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+
 volumes:
   pgdata:
     driver: local
