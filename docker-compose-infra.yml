@@ -5,30 +5,16 @@ services:
     image: jenkins/jenkins:lts-jdk21
     container_name: infra-jenkins
     user: jenkins
+    group_add:
+      - "136"
     ports:
       - "9090:8080"
       - "50000:50000"
     environment:
       - JAVA_OPTS=-XX:+UseG1GC -XX:MaxRAMPercentage=75.0
-      - DOCKER_HOST=tcp://docker:2376
-      - DOCKER_TLS_VERIFY=1
-      - DOCKER_CERT_PATH=/certs/client
     volumes:
       - jenkins_data:/var/jenkins_home
-      - jenkins_certs:/certs/client:ro
-    depends_on:
-      - docker
-    restart: unless-stopped
-
-  docker:
-    image: docker:dind
-    container_name: infra-docker-dind
-    privileged: true
-    environment:
-      - DOCKER_TLS_CERTDIR=/certs
-    volumes:
-      - jenkins_data:/var/jenkins_home
-      - jenkins_certs:/certs
+      - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
 
   k3s:
@@ -49,8 +35,6 @@ services:
 
 volumes:
   jenkins_data:
-    driver: local
-  jenkins_certs:
     driver: local
   k3s_data:
     driver: local
