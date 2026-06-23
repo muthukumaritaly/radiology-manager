@@ -1,0 +1,150 @@
+.tree-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.tree-panel,
+.detail-panel {
+  min-width: 0;
+}
+
+:host ::ng-deep .tree-panel .p-card-body {
+  padding: 1.1rem;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.search-field {
+  flex: 1;
+  min-width: 220px;
+}
+
+.org-tree {
+  max-height: calc(100dvh - 16rem);
+  overflow: auto;
+  padding-right: 0.25rem;
+
+  ::ng-deep {
+    .p-tree {
+      border: none;
+      padding: 0;
+      background: transparent;
+
+      .p-tree-root-children {
+        padding: 0;
+      }
+
+      .p-tree-node {
+        padding: 0.15rem 0;
+      }
+
+      .p-tree-node-content {
+        padding: 0.4rem 0.55rem;
+        border-radius: 6px;
+        transition: background-color 0.15s, color 0.15s;
+        gap: 0.35rem;
+
+        &:hover {
+          background-color: var(--rm-bg-hover, rgba(0, 0, 0, 0.04));
+        }
+
+        &.p-tree-node-selected {
+          background-color: var(--rm-primary-light, rgba(26, 115, 232, 0.08));
+          
+          .node-name {
+            color: var(--rm-primary, #1a73e8);
+          }
+        }
+      }
+
+      .p-tree-node-togglebutton {
+        width: 1.5rem;
+        height: 1.5rem;
+        color: var(--rm-text-secondary, #5f6368);
+        border-radius: 50%;
+        transition: background-color 0.15s;
+        margin-right: 0.2rem;
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.06);
+          color: var(--rm-text-primary, #202124);
+        }
+      }
+
+      .p-tree-node-children {
+        padding-left: 1.4rem; /* Beautiful, clear indentation for branches */
+      }
+    }
+  }
+}
+
+.tree-node {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  width: 100%;
+
+  > i:first-child {
+    font-size: 1.05rem;
+    color: var(--rm-primary, #1a73e8);
+    flex-shrink: 0;
+  }
+}
+
+.equipment-node {
+  .node-name {
+    font-weight: 600;
+  }
+}
+
+.node-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.node-name {
+  font-weight: 500;
+  color: var(--rm-text-primary);
+}
+
+.node-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.serial {
+  font-size: 0.78rem;
+  color: var(--rm-text-secondary);
+}
+
+.detail-panel {
+  position: sticky;
+  top: 5.5rem;
+}
+
+@media (max-width: 1024px) {
+  .tree-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-panel {
+    position: static;
+  }
+
+  .org-tree {
+    max-height: none;
+  }
+}

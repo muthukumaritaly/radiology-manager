@@ -1,6 +1,7 @@
 package com.healthcare.radiology_manager.service;
 
 import com.healthcare.radiology_manager.builder.OrganizationTreeBuilder;
+import com.healthcare.radiology_manager.dto.OrganizationResponse;
 import com.healthcare.radiology_manager.dto.OrganizationTreeResponse;
 import com.healthcare.radiology_manager.entity.Container;
 import com.healthcare.radiology_manager.entity.Equipment;
@@ -53,5 +54,14 @@ public class OrganizationServiceImpl implements OrganizationService {
                   allContainers.size(), allEquipment.size(), organizationId);
 
         return organizationTreeBuilder.buildTree(organization, allContainers, allEquipment);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<OrganizationResponse> getAllOrganizations() {
+        log.info("Fetching all organizations");
+        return organizationRepository.findAll().stream()
+                .map(org -> new OrganizationResponse(org.getId(), org.getName()))
+                .toList();
     }
 }

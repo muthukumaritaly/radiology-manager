@@ -1,0 +1,61 @@
+@import 'primeicons/primeicons.css';
+
+:root {
+  --rm-primary: #0284c7;
+  --rm-primary-dark: #0369a1;
+  --rm-accent: #0d9488;
+  --rm-surface: #f0f7fc;
+  --rm-surface-elevated: #ffffff;
+  --rm-border: #d8e6f2;
+  --rm-text-primary: #0f2744;
+  --rm-text-secondary: #5b728a;
+  --rm-gradient: linear-gradient(135deg, #0284c7 0%, #0d9488 55%, #14b8a6 100%);
+  --rm-shadow: 0 10px 30px rgba(15, 39, 68, 0.08);
+  --rm-shadow-soft: 0 4px 18px rgba(2, 132, 199, 0.12);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  background: var(--rm-surface);
+  color: var(--rm-text-primary);
+}
+
+.p-card {
+  box-shadow: var(--rm-shadow) !important;
+  border: 1px solid var(--rm-border);
+}
+
+.p-tree {
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+.p-tree-node-content {
+  border-radius: 10px;
+  transition: background 0.2s ease;
+}
+
+.p-tree-node-content.p-tree-node-selected {
+  background: rgba(2, 132, 199, 0.1) !important;
+}
+
+.p-toast .p-toast-message-success {
+  border-left: 4px solid #16a34a;
+}
+
+.p-toast .p-toast-message-error {
+  border-left: 4px solid #dc2626;
+}

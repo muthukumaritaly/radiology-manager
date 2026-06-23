@@ -1,0 +1,54 @@
+<app-page-header
+  eyebrow="Overview"
+  title="Dashboard"
+  subtitle="Monitor organization assets, equipment distribution, and facility structure at a glance."
+/>
+
+@if (loading()) {
+  <app-loading-spinner message="Loading dashboard metrics..." />
+} @else if (error()) {
+  <app-empty-state
+    icon="pi-exclamation-circle"
+    title="Dashboard unavailable"
+    [description]="error()!"
+    actionLabel="Retry"
+    [action]="loadDashboard.bind(this)"
+  />
+} @else if (summary(); as data) {
+  <section class="org-banner">
+    <div class="banner-icon"><i class="pi pi-building"></i></div>
+    <div>
+      <span>Organization</span>
+      <h2>{{ data.organizationName }}</h2>
+    </div>
+    <p-tag value="Live data" severity="success" [rounded]="true" />
+  </section>
+
+  <section class="stats-grid">
+    <app-stat-card
+      label="Total Containers"
+      [value]="data.totalContainers"
+      icon="pi-folder"
+      accentColor="linear-gradient(135deg, #0284c7, #0369a1)"
+      hint="Buildings, departments, and rooms"
+    />
+    <app-stat-card
+      label="Total Equipment"
+      [value]="data.totalEquipment"
+      icon="pi-box"
+      accentColor="linear-gradient(135deg, #0d9488, #0f766e)"
+      hint="Registered radiology devices"
+    />
+    <app-stat-card
+      label="Equipment Types"
+      [value]="chartData().length"
+      icon="pi-tags"
+      accentColor="linear-gradient(135deg, #7c3aed, #6d28d9)"
+      hint="Distinct modality categories"
+    />
+  </section>
+
+  <section class="chart-section">
+    <app-bar-chart title="Equipment by Type" [data]="chartData()" />
+  </section>
+}

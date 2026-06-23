@@ -33,3 +33,23 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Frontend dependencies & build outputs
+**/node_modules/
+**/dist/
+**/.angular/
+**/out-tsc/
+**/.sass-cache/
+**/coverage/
+
+# Kubernetes configuration (contains sensitive tokens/credentials)
+*kubeconfig.yaml
+*.kubeconfig
+
+# Logs
+*.log
+
+# System files
+.DS_Store
+Thumbs.db
+

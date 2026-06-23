@@ -6,7 +6,6 @@ import com.healthcare.radiology_manager.entity.Container;
 import com.healthcare.radiology_manager.entity.Equipment;
 import com.healthcare.radiology_manager.entity.Organization;
 import com.healthcare.radiology_manager.exception.ResourceNotFoundException;
-import com.healthcare.radiology_manager.exception.ValidationException;
 import com.healthcare.radiology_manager.mapper.EquipmentMapper;
 import com.healthcare.radiology_manager.repository.ContainerRepository;
 import com.healthcare.radiology_manager.repository.EquipmentRepository;

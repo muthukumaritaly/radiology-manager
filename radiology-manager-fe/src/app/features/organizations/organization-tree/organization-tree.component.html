@@ -1,0 +1,89 @@
+<app-page-header
+  eyebrow="Hierarchy"
+  title="Organization Tree"
+  subtitle="Browse nested containers and equipment. Select any device to view its full details."
+>
+  <p-button label="Expand all" icon="pi pi-angle-double-down" [outlined]="true" (onClick)="expandAll()" />
+  <p-button label="Collapse all" icon="pi pi-angle-double-up" [outlined]="true" (onClick)="collapseAll()" />
+</app-page-header>
+
+@if (loading()) {
+  <app-loading-spinner message="Loading organization tree..." />
+} @else if (error()) {
+  <app-empty-state
+    icon="pi-exclamation-triangle"
+    title="Tree unavailable"
+    [description]="error()!"
+    actionLabel="Retry"
+    [action]="loadTree.bind(this)"
+  />
+} @else {
+  <div class="tree-layout">
+    <p-card class="tree-panel">
+      <div class="toolbar">
+        <p-iconfield class="search-field">
+          <p-inputicon class="pi pi-search" />
+          <input
+            pInputText
+            type="text"
+            [formControl]="searchControl"
+            placeholder="Search equipment, containers, or organization"
+          />
+        </p-iconfield>
+
+        <p-tag [value]="totalEquipment() + ' equipment'" severity="info" [rounded]="true" icon="pi pi-box" />
+
+        @if (searchControl.value) {
+          <p-button icon="pi pi-times" [rounded]="true" [text]="true" (onClick)="clearSearch()" />
+        }
+      </div>
+
+      @if (treeNodes().length === 0) {
+        <app-empty-state
+          icon="pi-search"
+          title="No matches found"
+          description="Try adjusting your search term to find organization nodes or equipment."
+          actionLabel="Clear search"
+          [action]="clearSearch.bind(this)"
+        />
+      } @else {
+        <p-tree
+          [value]="treeNodes()"
+          selectionMode="single"
+          [(selection)]="selectedTreeNode"
+          (onNodeSelect)="onNodeSelect($event)"
+          class="org-tree"
+        >
+          <ng-template let-node pTemplate="default">
+            @if (node.data; as data) {
+              <div class="tree-node" [class.equipment-node]="data.kind === 'equipment'">
+                <i [class]="getNodeIcon(data)" [style.color]="data.kind === 'equipment' ? getTypeColor(data) : null"></i>
+
+                <div class="node-content">
+                  <span class="node-name">{{ node.label }}</span>
+                  @if (data.kind === 'equipment') {
+                    <div class="node-meta">
+                      <p-tag [value]="getTypeLabel(data)" [severity]="getTypeSeverity(data)" [rounded]="true" />
+                      <span class="serial">SN: {{ data.serialNumber }}</span>
+                    </div>
+                  }
+                </div>
+
+                @if (data.kind !== 'equipment' && data.equipmentCount > 0) {
+                  <p-badge [value]="data.equipmentCount" severity="info" />
+                }
+              </div>
+            }
+          </ng-template>
+        </p-tree>
+      }
+    </p-card>
+
+    <div class="detail-panel">
+      <app-equipment-detail-panel
+        [equipment]="selectedEquipment()"
+        [containerName]="selectedContainerName()"
+      />
+    </div>
+  </div>
+}
