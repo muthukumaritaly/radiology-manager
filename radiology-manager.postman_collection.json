@@ -1,0 +1,78 @@
+{
+	"info": {
+		"_postman_id": "f86c2c62-11cf-4d92-bf3f-c56b4618e7e1",
+		"name": "Radiology Manager API",
+		"description": "Postman collection for testing the main endpoints of the Radiology Registry Management System.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Register New Equipment",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "X-User-Role",
+						"value": "ADMIN",
+						"description": "Required authorization header for write operations in the POC setup"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"GE Revolution CT Scan v2\",\n  \"type\": \"CT\",\n  \"serialNumber\": \"SN-CT-9999\",\n  \"installationDate\": \"2026-06-19\",\n  \"organizationId\": 1,\n  \"containerId\": 3\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/equipment",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"equipment"
+					]
+				},
+				"description": "Registers a new radiological device under an organization and optional container. Requires ADMIN role privileges via X-User-Role header."
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve Organization Tree",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/organizations/:id/tree",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"organizations",
+						":id",
+						"tree"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1",
+							"description": "The unique database ID of the organization to retrieve the tree for"
+						}
+					]
+				},
+				"description": "Retrieves the recursive nested location and equipment hierarchy tree for a given organization. This is a public API and requires no role header."
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	]
+}
