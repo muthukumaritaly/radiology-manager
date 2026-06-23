@@ -1,6 +1,7 @@
 package com.healthcare.radiology_manager.service;
 
 import com.healthcare.radiology_manager.builder.OrganizationTreeBuilder;
+import com.healthcare.radiology_manager.dto.OrganizationResponse;
 import com.healthcare.radiology_manager.dto.OrganizationTreeResponse;
 import com.healthcare.radiology_manager.entity.Container;
 import com.healthcare.radiology_manager.entity.Equipment;
@@ -91,5 +92,28 @@ class OrganizationServiceUnitTest {
 
         verify(organizationRepository).findById(orgId);
         verifyNoInteractions(containerRepository, equipmentRepository, organizationTreeBuilder);
+    }
+
+    @Test
+    @DisplayName("Get All Organizations - Returns list of OrganizationResponse")
+    void getAllOrganizations_successful() {
+        // Arrange
+        Organization org1 = new Organization("San Raffaele");
+        org1.setId(1L);
+        Organization org2 = new Organization("ASL 1");
+        org2.setId(2L);
+        when(organizationRepository.findAll()).thenReturn(List.of(org1, org2));
+
+        // Act
+        var responses = organizationService.getAllOrganizations();
+
+        // Assert
+        assertThat(responses).hasSize(2);
+        assertThat(responses.get(0).id()).isEqualTo(1L);
+        assertThat(responses.get(0).name()).isEqualTo("San Raffaele");
+        assertThat(responses.get(1).id()).isEqualTo(2L);
+        assertThat(responses.get(1).name()).isEqualTo("ASL 1");
+
+        verify(organizationRepository).findAll();
     }
 }

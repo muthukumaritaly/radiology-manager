@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  jenkins:
+    image: jenkins/jenkins:lts-jdk21
+    container_name: infra-jenkins
+    user: jenkins
+    group_add:
+      - "136"
+    ports:
+      - "9090:8080"
+      - "50000:50000"
+    environment:
+      - JAVA_OPTS=-XX:+UseG1GC -XX:MaxRAMPercentage=75.0
+    volumes:
+      - jenkins_data:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+
+  k3s:
+    image: rancher/k3s:v1.29.3-k3s1
+    container_name: infra-k3s
+    privileged: true
+    command: server --disable traefik --tls-san=k3s
+    ports:
+      - "6443:6443"
+      - "80:80"
+      - "443:443"
+    environment:
+      - K3S_TOKEN=secret-infrastructure-token
+      - K3S_KUBECONFIG_MODE=644
+    volumes:
+      - k3s_data:/var/lib/rancher/k3s
+    restart: unless-stopped
+
+volumes:
+  jenkins_data:
+    driver: local
+  k3s_data:
+    driver: local

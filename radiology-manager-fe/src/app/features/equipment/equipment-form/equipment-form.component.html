@@ -1,0 +1,114 @@
+<app-page-header
+  eyebrow="Registration"
+  title="Add Equipment"
+  subtitle="Register a new radiology device under an organization and optional container location."
+/>
+
+<p-card class="form-card">
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <div class="form-grid">
+      <div class="field">
+        <label for="name" class="field-label">Equipment Name</label>
+        <input pInputText id="name" formControlName="name" class="field-control" />
+        @if (showError('name')) {
+          <p-message severity="error" size="small" variant="simple">{{ getError('name', 'Name') }}</p-message>
+        }
+      </div>
+
+      <div class="field">
+        <label for="type" class="field-label">Equipment Type</label>
+        <p-select
+          inputId="type"
+          formControlName="type"
+          [options]="equipmentTypes"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Select equipment type"
+          appendTo="body"
+          styleClass="field-control"
+        />
+        @if (showError('type')) {
+          <p-message severity="error" size="small" variant="simple">{{ getError('type', 'Type') }}</p-message>
+        }
+      </div>
+
+      <div class="field">
+        <label for="serialNumber" class="field-label">Serial Number</label>
+        <input pInputText id="serialNumber" formControlName="serialNumber" class="field-control" />
+        @if (showError('serialNumber')) {
+          <p-message severity="error" size="small" variant="simple">{{
+            getError('serialNumber', 'Serial number')
+          }}</p-message>
+        }
+      </div>
+
+      <div class="field">
+        <label for="installationDate" class="field-label">Installation Date</label>
+        <p-datepicker
+          inputId="installationDate"
+          formControlName="installationDate"
+          [showIcon]="true"
+          dateFormat="yy-mm-dd"
+          appendTo="body"
+          styleClass="field-control"
+          inputStyleClass="field-control"
+        />
+        @if (showError('installationDate')) {
+          <p-message severity="error" size="small" variant="simple">{{
+            getError('installationDate', 'Installation date')
+          }}</p-message>
+        }
+      </div>
+
+      <div class="field">
+        <label for="organizationId" class="field-label">Organization</label>
+        <p-select
+          inputId="organizationId"
+          formControlName="organizationId"
+          [options]="organizations()"
+          optionLabel="name"
+          optionValue="id"
+          placeholder="Select organization"
+          appendTo="body"
+          styleClass="field-control"
+        />
+        @if (showError('organizationId')) {
+          <p-message severity="error" size="small" variant="simple">{{
+            getError('organizationId', 'Organization')
+          }}</p-message>
+        }
+      </div>
+
+      <div class="field">
+        <label for="containerId" class="field-label">Container (optional)</label>
+        <p-select
+          inputId="containerId"
+          formControlName="containerId"
+          [options]="containerOptions()"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Select container location"
+          appendTo="body"
+          styleClass="field-control"
+        />
+      </div>
+    </div>
+
+    <div class="actions">
+      <p-button
+        label="Reset"
+        severity="secondary"
+        [outlined]="true"
+        type="button"
+        (onClick)="resetForm()"
+        [disabled]="submitting()"
+      />
+      <p-button
+        label="Register Equipment"
+        icon="pi pi-save"
+        type="submit"
+        [loading]="submitting()"
+      />
+    </div>
+  </form>
+</p-card>

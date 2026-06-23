@@ -1,0 +1,62 @@
+<div class="layout" [class.sidebar-collapsed]="!sidebarOpen()">
+  @if (isMobile()) {
+    <button
+      class="backdrop"
+      type="button"
+      aria-label="Close menu"
+      [class.visible]="sidebarOpen()"
+      (click)="toggleSidebar()"
+    ></button>
+  }
+
+  <aside class="sidebar" [class.open]="sidebarOpen()">
+    <div class="brand">
+      <div class="brand-icon"><i class="pi pi-heart-fill"></i></div>
+      <div class="brand-text">
+        <strong>Radiology Manager</strong>
+        <span>Healthcare Platform</span>
+      </div>
+    </div>
+
+    <nav class="nav">
+      @for (item of navItems; track item.route) {
+        <a
+          [routerLink]="item.route"
+          routerLinkActive="active"
+          pRipple
+          (click)="closeSidebarOnMobile()"
+        >
+          <i [class]="'pi ' + item.icon"></i>
+          <span>{{ item.label }}</span>
+        </a>
+      }
+    </nav>
+
+    <div class="sidebar-footer">
+      <i class="pi pi-shield"></i>
+      <span>Secure clinical operations</span>
+    </div>
+  </aside>
+
+  <div class="main">
+    <p-toolbar class="topbar">
+      <ng-template #start>
+        <p-button
+          icon="pi pi-bars"
+          [rounded]="true"
+          [text]="true"
+          severity="secondary"
+          (onClick)="toggleSidebar()"
+        />
+        <span class="topbar-title">Radiology Operations</span>
+      </ng-template>
+      <ng-template #end>
+        <span class="status-pill"><i class="pi pi-check-circle"></i> Connected</span>
+      </ng-template>
+    </p-toolbar>
+
+    <main class="page-content">
+      <router-outlet />
+    </main>
+  </div>
+</div>

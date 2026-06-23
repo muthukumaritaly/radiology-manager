@@ -1,0 +1,57 @@
+@if (equipment(); as item) {
+  <p-card class="detail-card">
+    <div class="detail-hero" [style.--accent]="typeColor()">
+      <div class="icon-wrap">
+        <i [class]="iconClass()"></i>
+      </div>
+      <div>
+        <p-tag [value]="typeLabel()" [severity]="severity()" />
+        <h2>{{ item.name }}</h2>
+        <p class="subtitle">Equipment ID #{{ item.id }}</p>
+      </div>
+    </div>
+
+    <p-divider />
+
+    <div class="detail-grid">
+      <div class="detail-item">
+        <span class="label"><i class="pi pi-hashtag"></i> Serial Number</span>
+        <strong>{{ item.serialNumber }}</strong>
+      </div>
+
+      <div class="detail-item">
+        <span class="label"><i class="pi pi-calendar"></i> Installation Date</span>
+        <strong>{{ formatDate(item.installationDate) }}</strong>
+      </div>
+
+      <div class="detail-item">
+        <span class="label"><i class="pi pi-building"></i> Organization ID</span>
+        <strong>{{ item.organizationId ?? '—' }}</strong>
+      </div>
+
+      <div class="detail-item">
+        <span class="label"><i class="pi pi-map-marker"></i> Container</span>
+        <strong>
+          @if (item.containerId) {
+            {{ containerName() ?? 'Container' }} (ID: {{ item.containerId }})
+          } @else {
+            Organization level
+          }
+        </strong>
+      </div>
+
+      <div class="detail-item full">
+        <span class="label"><i class="pi pi-info-circle"></i> Modality Type</span>
+        <strong>{{ typeLabel() }}</strong>
+      </div>
+    </div>
+  </p-card>
+} @else {
+  <p-card class="detail-card placeholder">
+    <div class="placeholder-content">
+      <i class="pi pi-search"></i>
+      <h3>Select equipment</h3>
+      <p>Expand the tree and click an equipment node to view its full details here.</p>
+    </div>
+  </p-card>
+}

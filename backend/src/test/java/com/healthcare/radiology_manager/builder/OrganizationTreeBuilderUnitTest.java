@@ -89,15 +89,28 @@ class OrganizationTreeBuilderUnitTest {
     @Test
     @DisplayName("TreeBuilder: halts recursion when cycle is detected")
     void buildTree_haltsRecursion_whenCycleDetected() {
-        Container c1 = new Container("Cycle Node 1", organization, null);
-        c1.setId(10L);
-        Container c2 = new Container("Cycle Node 2", organization, c1);
-        c2.setId(20L);
+        Container c1 = mock(Container.class);
+        when(c1.getId()).thenReturn(10L);
+        when(c1.getName()).thenReturn("C1");
+        when(c1.getParentContainer()).thenReturn(null);
 
-        // Establish structural cycle
-        c1.setParentContainer(c2);
+        Container c2 = mock(Container.class);
+        when(c2.getId()).thenReturn(20L);
+        when(c2.getName()).thenReturn("C2");
+        when(c2.getParentContainer()).thenReturn(c1);
 
-        List<Container> allContainers = Arrays.asList(c1, c2);
+        Container c3 = mock(Container.class);
+        when(c3.getId()).thenReturn(30L);
+        when(c3.getName()).thenReturn("C3");
+        when(c3.getParentContainer()).thenReturn(c2);
+
+        Container c2Dup = mock(Container.class);
+        when(c2Dup.getName()).thenReturn("C2-Dup");
+        // To bypass duplicate keys in Collectors.toMap, return 200 first, then return 20 inside the loop
+        when(c2Dup.getId()).thenReturn(200L, 200L, 20L);
+        when(c2Dup.getParentContainer()).thenReturn(c3);
+
+        List<Container> allContainers = Arrays.asList(c1, c2, c3, c2Dup);
         List<Equipment> allEquipment = Collections.emptyList();
 
         // Act
@@ -105,9 +118,18 @@ class OrganizationTreeBuilderUnitTest {
 
         // Assert
         assertThat(response).isNotNull();
-        // Since both have parent pointers and cycle is detected, no node is treated as root, or cycle stops recursion.
-        // In this setup, c1's parent is c2 (which is not null) and c2's parent is c1 (not null).
-        // Since neither has parentContainer == null, rootContainers list is empty.
-        assertThat(response.getContainers()).isEmpty();
+        assertThat(response.getContainers()).hasSize(1);
+        ContainerTreeNode root = response.getContainers().get(0);
+        assertThat(root.getId()).isEqualTo(10L);
+        assertThat(root.getContainers()).hasSize(1);
+        
+        ContainerTreeNode childNode = root.getContainers().get(0);
+        assertThat(childNode.getId()).isEqualTo(20L);
+        assertThat(childNode.getContainers()).hasSize(1);
+        
+        ContainerTreeNode grandchild = childNode.getContainers().get(0);
+        assertThat(grandchild.getId()).isEqualTo(30L);
+        assertThat(grandchild.getContainers()).hasSize(1);
+        assertThat(grandchild.getContainers().get(0).getId()).isEqualTo(20L);
     }
 }

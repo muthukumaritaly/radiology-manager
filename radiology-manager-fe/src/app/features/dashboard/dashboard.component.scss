@@ -1,0 +1,68 @@
+.org-banner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.35rem 1.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #e0f2fe 0%, #f0fdfa 55%, #ffffff 100%);
+  border: 1px solid #bae6fd;
+  box-shadow: var(--rm-shadow-soft);
+
+  .banner-icon {
+    width: 3.25rem;
+    height: 3.25rem;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    background: var(--rm-gradient);
+    color: white;
+  }
+
+  span {
+    display: block;
+    font-size: 0.78rem;
+    color: var(--rm-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+  }
+
+  h2 {
+    margin: 0.2rem 0 0;
+    font-size: 1.4rem;
+    color: var(--rm-text-primary);
+  }
+
+  p-tag {
+    margin-left: auto;
+  }
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.chart-section {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (max-width: 960px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .org-banner {
+    flex-wrap: wrap;
+  }
+
+  p-tag {
+    margin-left: 0 !important;
+  }
+}

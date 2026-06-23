@@ -1,9 +1,11 @@
 package com.healthcare.radiology_manager.controller;
 
 import com.healthcare.radiology_manager.dto.ErrorResponse;
+import com.healthcare.radiology_manager.dto.OrganizationResponse;
 import com.healthcare.radiology_manager.dto.OrganizationTreeResponse;
 import com.healthcare.radiology_manager.docs.OpenApiDocConstants;
 import com.healthcare.radiology_manager.service.OrganizationService;
+import java.util.List;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -66,5 +68,33 @@ public class OrganizationController {
             Long id) {
         OrganizationTreeResponse response = organizationService.getOrganizationTree(id);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    @Operation(
+        summary = "List all organizations",
+        description = "Fetches a list of all registered organizations.",
+        responses = {
+            @ApiResponse(
+                responseCode = "200", 
+                description = "Organizations retrieved successfully", 
+                content = @Content(
+                    mediaType = "application/json", 
+                    schema = @Schema(implementation = OrganizationResponse.class)
+                )
+            ),
+            @ApiResponse(
+                responseCode = "500", 
+                description = "Internal server error", 
+                content = @Content(
+                    mediaType = "application/json", 
+                    schema = @Schema(implementation = ErrorResponse.class)
+                )
+            )
+        }
+    )
+    public ResponseEntity<List<OrganizationResponse>> getAllOrganizations() {
+        List<OrganizationResponse> responses = organizationService.getAllOrganizations();
+        return ResponseEntity.ok(responses);
     }
 }
